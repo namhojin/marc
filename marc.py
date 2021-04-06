@@ -11,26 +11,22 @@ print('-----------------------FILE IO-----------------------');
 #marc = oFile.read().split('');
 
 #oFile = open('D:\\GitHub\\samples\\193201반출.mrc', "r", encoding='utf-16');
-oFile = open('D:\\GitHub\\samples\\tt.mrc', "r", encoding='utf-16');
+oFile = open('D:\\GitHub\\samples\\코라스반출_16le.mrc', "r", encoding='utf-16');
 marc = oFile.readlines();
+
+#marc=[marc2.rstrip() for marc2 in marc]
+
 
 
 print ('--------------------------MARC---------------');
 print (marc);
 print ('---------------------------------------------');
-marc_num = len(marc);
+marc_num = int((len(marc)+1)/2);
 
 count =0;
-while marc_num > count :
-    marc[count].rstrip('\n');
-    count = count +1;
 
-count =0;
-while marc_num > count :
-    print(marc[count]);
-    count = count +1;
 
-print ("marc num : ",marc_num-1);
+print ("marc num : ",marc_num);
 
 num=0;
 directory_num = 0;
@@ -38,7 +34,7 @@ comp =0;
 len_245 =0;
 start_245 =0;
 start_data=0;
-while num<marc_num-1 :
+while num<marc_num*2-1 :
     print ('--------------------------MARC[',num,']---------------');
     start_data = int (str(marc[num][12])+str(marc[num][13])+str(marc[num][14])+str(marc[num][15])+str(marc[num][16]));
 #    print ('start_data : ',str(marc[num][12]),str(marc[num][13]),str(marc[num][14]),str(marc[num][15]),str(marc[num][16]));
@@ -66,19 +62,36 @@ while num<marc_num-1 :
         directory_num = directory_num -1;
     
     
-    print('245 tag : ',end='');
+    
+    tag_245="";
     point =0;
     while len_245 > point :
-        print(marc[num][start_data+start_245+point], end='');
+#        print(marc[num][start_data+start_245+point], end='');
+        tag_245=tag_245+marc[num][start_data+start_245+point];
         point = point + 1;
         
-    print ('----------------------end 245tag');
+    print('245 tag :',tag_245);  
+    
+    tag_a="";
+    tag_b="";
+    #tag a 시작 반환
+    if tag_245.find("a") > -1:
+        print("tag a 시작위치 : ",tag_245.find("a"));
+    
+    #tag b 시작 반환
+    if tag_245.find(":b") > -1:
+        print("tag b 시작위치 : ",tag_245.find(":b"));
+    
+    
+    
+    
+    
  #   print('245 tag : ',marc[num][start_data+start_245],marc[num][start_data+start_245+1],marc[num][start_data+start_245+2],marc[num][start_data+start_245+3],marc[num][start_data+start_245+4],marc[num][start_data+start_245+5],marc[num][start_data+start_245+6],marc[num][start_data+start_245+7],marc[num][start_data+start_245+8],marc[num][start_data+start_245+9],marc[num][start_data+start_245+10]);
     
     print (marc[num]);
     print ('------------------------------------------------------'); 
     
-    num = num+1;
+    num = num+2;
 
 oFile.close();
 
