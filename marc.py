@@ -16,6 +16,8 @@ marc = oFile.readlines();
 
 #marc=[marc2.rstrip() for marc2 in marc]
 
+NewFile = open('D:\\GitHub\\samples\\output.mrc', "w", encoding='utf-16');
+
 
 
 print ('--------------------------MARC---------------');
@@ -34,16 +36,21 @@ comp =0;
 len_245 =0;
 start_245 =0;
 start_data=0;
+len_total=0;
 while num<marc_num*2-1 :
     print ('--------------------------MARC[',num,']---------------');
     start_data = int (str(marc[num][12])+str(marc[num][13])+str(marc[num][14])+str(marc[num][15])+str(marc[num][16]));
-#    print ('start_data : ',str(marc[num][12]),str(marc[num][13]),str(marc[num][14]),str(marc[num][15]),str(marc[num][16]));
     print ('start_data : ',start_data);
+    
+    len_total = int(str(marc[num][0])+str(marc[num][1])+str(marc[num][2])+str(marc[num][3])+str(marc[num][4]));
+#    print ('end_data : ',end_data);
+#    print(marc[num][end_data-1]);
+    
     #디렉토리 갯수 확인
     directory_num= int ((start_data-25)/12);
     print ('directory_num : ',directory_num);
-    #print ('directory num :',(int(str(marc[num][12])+str(marc[num][13])+str(marc[num][14])+str(marc[num][15])+str(marc[num][16]))-25)/12);
 
+    print("Last directory : ",marc[num][start_data-13:start_data-1]);
 
     
     #디렉토리 기호 찾기
@@ -74,19 +81,84 @@ while num<marc_num*2-1 :
     
     tag_a="";
     tag_b="";
-    #tag a 시작 반환
-    if tag_245.find("a") > -1:
-        print("tag a 시작위치 : ",tag_245.find("a"));
     
     #tag b 시작 반환
     if tag_245.find(":b") > -1:
-        print("tag b 시작위치 : ",tag_245.find(":b"));
-    
-    
-    
+        find_b=tag_245.find(":b")+3;
+        print("tag b 시작위치 : ",find_b);
+        #print(tag_245[tag_245.find(":b")]);
+        print("tag b : ",end='');
+        while tag_245[find_b] != "":
+            tag_b=tag_b+tag_245[find_b];
+            find_b=find_b+1;
+        tag_b=tag_b[:-1];
+        print(tag_b);
+        #tag a 시작 반환
+        if tag_245.find("a") > -1:
+            find_a=tag_245.find("a")+2;
+            print("tag a 시작위치 : ",find_a);
+            print("tag a : ",end='');
+            while tag_245[find_a] != "":
+                tag_a=tag_a+tag_245[find_a];
+                find_a=find_a+1;
+            tag_a=tag_a[:-1];
+            print(tag_a);
+        tag_940="0 a"+tag_a+" "+tag_b+"";
+        print("tag 940 : ",tag_940);
+        
+#        print ('end_data : ',end_data);
+        marc[num]=marc[num][:-2];
+        marc[num]=marc[num]+tag_940+"";
+        
+        
+        
+        
+        len_total = len_total + len(tag_940);
+        len_total=str(len_total);
+        len_total_str=len_total.zfill(5);
+        print("len_total : ",len_total_str);
+        
+        start_data_str=str(start_data+12);
+        start_data_str=start_data_str.zfill(5);
+        print("start_data : ",start_data_str);
+        
+        header="";
+        
+        header = len_total_str + marc[num][5:12]+start_data_str;
+        
+        print("header :",header);
+        
+        marc[num]=marc[num][17:];
+        marc[num]=header+marc[num];
+        
+        
+        tmp_1=marc[num][:start_data-1];
+        tmp_2=marc[num][start_data-1:];
+        
+        print("tmp1 ---",tmp_1);
+        print("tmp2 ---",tmp_2);
+        len_940_str = str(len(tag_940));
+        len_940_str = len_940_str.zfill(4);
+        
+#        marc[num][start_data-13:start_data-1]
+        last_dir_len=int(marc[num][start_data-10:start_data-6]);
+        last_dir_start=int(marc[num][start_data-6:start_data-1]);
+        creat_dir_start = last_dir_len+last_dir_start;
+        creat_dir_start = str(creat_dir_start);
+        creat_dir_start = creat_dir_start.zfill(5);
+        print(last_dir_len);
+        print(last_dir_start);
+        
+        marc[num] = tmp_1 +"940"+ len_940_str +creat_dir_start+ tmp_2;
+        
+        
+        
     
     
  #   print('245 tag : ',marc[num][start_data+start_245],marc[num][start_data+start_245+1],marc[num][start_data+start_245+2],marc[num][start_data+start_245+3],marc[num][start_data+start_245+4],marc[num][start_data+start_245+5],marc[num][start_data+start_245+6],marc[num][start_data+start_245+7],marc[num][start_data+start_245+8],marc[num][start_data+start_245+9],marc[num][start_data+start_245+10]);
+    
+    NewFile.writelines(marc[num]);
+    
     
     print (marc[num]);
     print ('------------------------------------------------------'); 
@@ -94,6 +166,7 @@ while num<marc_num*2-1 :
     num = num+2;
 
 oFile.close();
+NewFile.close();
 
 
 
