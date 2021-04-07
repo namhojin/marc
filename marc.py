@@ -7,23 +7,20 @@ print ('Path : '+os.getcwd());
 
 print('-----------------------FILE IO-----------------------');
 
-#oFile = open('C:\\python\\tt.mrc', "r", encoding='utf-16');
-#marc = oFile.read().split('');
-
-#oFile = open('D:\\GitHub\\samples\\193201반출.mrc', "r", encoding='utf-16');
+#읽어오기
 oFile = open('D:\\GitHub\\samples\\코라스반출_16le.mrc', "r", encoding='utf-16');
 marc = oFile.readlines();
 
-#marc=[marc2.rstrip() for marc2 in marc]
-
+#쓰기
 NewFile = open('D:\\GitHub\\samples\\output.mrc', "w", encoding='utf-16');
-
-
+#코라스 반출시 \n 값이 같이 나와서 짝수만 리스트업
+marc=marc[0::2];
 
 print ('--------------------------MARC---------------');
 print (marc);
 print ('---------------------------------------------');
-marc_num = int((len(marc)+1)/2);
+#marc_num = int((len(marc)+1)/2);
+marc_num = len(marc);
 
 count =0;
 
@@ -37,14 +34,15 @@ len_245 =0;
 start_245 =0;
 start_data=0;
 len_total=0;
-while num<marc_num*2-1 :
+
+change_marc=[];
+
+while num<marc_num :
     print ('--------------------------MARC[',num,']---------------');
     start_data = int (str(marc[num][12])+str(marc[num][13])+str(marc[num][14])+str(marc[num][15])+str(marc[num][16]));
     print ('start_data : ',start_data);
     
     len_total = int(str(marc[num][0])+str(marc[num][1])+str(marc[num][2])+str(marc[num][3])+str(marc[num][4]));
-#    print ('end_data : ',end_data);
-#    print(marc[num][end_data-1]);
     
     #디렉토리 갯수 확인
     directory_num= int ((start_data-25)/12);
@@ -52,11 +50,9 @@ while num<marc_num*2-1 :
 
     print("Last directory : ",marc[num][start_data-13:start_data-1]);
 
-    
     #디렉토리 기호 찾기
     while directory_num > 0 :
         comp = int (marc[num][24+12*(directory_num-1)]+marc[num][25+12*(directory_num-1)]+marc[num][26+12*(directory_num-1)]);
- #       print (comp);
         #245 tag 찾기
         if comp == 245 :
             start_245 = int (marc[num][24+12*(directory_num-1)+7]+marc[num][24+12*(directory_num-1)+8]+marc[num][24+12*(directory_num-1)+9]+marc[num][24+12*(directory_num-1)+10]+marc[num][24+12*(directory_num-1)+11]);
@@ -106,13 +102,9 @@ while num<marc_num*2-1 :
         tag_940="0 a"+tag_a+" "+tag_b+"";
         print("tag 940 : ",tag_940);
         
-#        print ('end_data : ',end_data);
         marc[num]=marc[num][:-2];
         marc[num]=marc[num]+tag_940+"";
-        
-        
-        
-        
+               
         len_total = len_total + len(tag_940);
         len_total=str(len_total);
         len_total_str=len_total.zfill(5);
@@ -122,7 +114,7 @@ while num<marc_num*2-1 :
         start_data_str=start_data_str.zfill(5);
         print("start_data : ",start_data_str);
         
-        header="";
+    #    header="";
         
         header = len_total_str + marc[num][5:12]+start_data_str;
         
@@ -140,8 +132,9 @@ while num<marc_num*2-1 :
         len_940_str = str(len(tag_940));
         len_940_str = len_940_str.zfill(4);
         
-#        marc[num][start_data-13:start_data-1]
+        #마지막 디렉토리 길이
         last_dir_len=int(marc[num][start_data-10:start_data-6]);
+        #마지막 디렉토리 시작위치
         last_dir_start=int(marc[num][start_data-6:start_data-1]);
         creat_dir_start = last_dir_len+last_dir_start;
         creat_dir_start = str(creat_dir_start);
@@ -151,35 +144,18 @@ while num<marc_num*2-1 :
         
         marc[num] = tmp_1 +"940"+ len_940_str +creat_dir_start+ tmp_2;
         
-        
-        
-    
-    
- #   print('245 tag : ',marc[num][start_data+start_245],marc[num][start_data+start_245+1],marc[num][start_data+start_245+2],marc[num][start_data+start_245+3],marc[num][start_data+start_245+4],marc[num][start_data+start_245+5],marc[num][start_data+start_245+6],marc[num][start_data+start_245+7],marc[num][start_data+start_245+8],marc[num][start_data+start_245+9],marc[num][start_data+start_245+10]);
+        change_marc.append(num);
     
     NewFile.writelines(marc[num]);
-    
     
     print (marc[num]);
     print ('------------------------------------------------------'); 
     
-    num = num+2;
+    num = num+1;
+
+print("change_marc : ",change_marc);
 
 oFile.close();
 NewFile.close();
 
 
-
-
-
-#print (int(str(marc[0][24])+str(marc[0][25])+str(marc[0][26])));
-
-
-
-
-
-#print (sys.getdefaultencoding());
-
-#sys.setdefaultencoding(ascii);
-
-#print (sys.getdefaultencoding());
