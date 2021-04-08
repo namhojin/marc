@@ -8,11 +8,12 @@ print ('Path : '+os.getcwd());
 print('-----------------------FILE IO-----------------------');
 
 #읽어오기
-oFile = open('D:\\GitHub\\samples\\코라스반출_16le.mrc', "r", encoding='utf-16');
+#oFile = open('D:\\GitHub\\samples\\'+sys.argv[1], "r", encoding='utf-16');
+oFile = open(sys.argv[1], "r", encoding='utf-16');
 marc = oFile.readlines();
 
 #쓰기
-NewFile = open('D:\\GitHub\\samples\\output.mrc', "w", encoding='utf-16');
+NewFile = open(sys.argv[1][:-4]+'_940.mrc', "w", encoding='utf-16');
 #코라스 반출시 \n 값이 같이 나와서 짝수만 리스트업
 marc=marc[0::2];
 
