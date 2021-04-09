@@ -8,7 +8,7 @@ print ('Path : '+os.getcwd());
 print('-----------------------FILE IO-----------------------');
 
 #읽어오기
-#oFile = open('D:\\GitHub\\samples\\'+sys.argv[1], "r", encoding='utf-16');
+
 oFile = open(sys.argv[1], "r", encoding='utf-16');
 marc = oFile.readlines();
 
@@ -40,10 +40,11 @@ change_marc=[];
 
 while num<marc_num :
     print ('--------------------------MARC[',num,']---------------');
-    start_data = int (str(marc[num][12])+str(marc[num][13])+str(marc[num][14])+str(marc[num][15])+str(marc[num][16]));
+
+    start_data = int (str(marc[num][12:17]));
     print ('start_data : ',start_data);
     
-    len_total = int(str(marc[num][0])+str(marc[num][1])+str(marc[num][2])+str(marc[num][3])+str(marc[num][4]));
+    len_total = int(str(marc[num][0:5]));
     
     #디렉토리 갯수 확인
     directory_num= int ((start_data-25)/12);
@@ -53,12 +54,12 @@ while num<marc_num :
 
     #디렉토리 기호 찾기
     while directory_num > 0 :
-        comp = int (marc[num][24+12*(directory_num-1)]+marc[num][25+12*(directory_num-1)]+marc[num][26+12*(directory_num-1)]);
+        comp = int (marc[num][12*(directory_num-1)+24:12*(directory_num-1)+27]);
         #245 tag 찾기
         if comp == 245 :
-            start_245 = int (marc[num][24+12*(directory_num-1)+7]+marc[num][24+12*(directory_num-1)+8]+marc[num][24+12*(directory_num-1)+9]+marc[num][24+12*(directory_num-1)+10]+marc[num][24+12*(directory_num-1)+11]);
+            start_245 = int (marc[num][24+12*(directory_num-1)+7:24+12*(directory_num-1)+12]);
             
-            len_245 = int (marc[num][24+12*(directory_num-1)+3]+marc[num][24+12*(directory_num-1)+4]+marc[num][24+12*(directory_num-1)+5]+marc[num][24+12*(directory_num-1)+6]);
+            len_245 = int (marc[num][24+12*(directory_num-1)+3:24+12*(directory_num-1)+7]);
            
             print ('245 tag start :',start_245);
             print ('245 tag length :',len_245);
@@ -115,7 +116,6 @@ while num<marc_num :
         start_data_str=start_data_str.zfill(5);
         print("start_data : ",start_data_str);
         
-    #    header="";
         
         header = len_total_str + marc[num][5:12]+start_data_str;
         
@@ -158,5 +158,3 @@ print("change_marc : ",change_marc);
 
 oFile.close();
 NewFile.close();
-
-
