@@ -15,8 +15,19 @@ marc = oFile.readlines();
 
 #쓰기
 NewFile = open(sys.argv[1][:-4]+'_940.mrc', "w", encoding='utf-16');
+
+def list_marc(marc):
+    count =0;
+    marc1=[];
+    while len(marc)>count :
+        if marc[count] != "\n":
+            marc1.append(marc[count]);
+        count=count+1;
+    #marc=marc[0::2];
+    return marc1
+    
 #코라스 반출시 \n 값이 같이 나와서 짝수만 리스트업
-marc=marc[0::2];
+marc = list_marc(marc);
 
 print ('--------------------------MARC---------------');
 print (marc);
@@ -24,7 +35,6 @@ print ('---------------------------------------------');
 #marc_num = int((len(marc)+1)/2);
 marc_num = len(marc);
 
-count =0;
 
 
 print ("marc num : ",marc_num);
