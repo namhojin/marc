@@ -4,8 +4,6 @@ import sys
 print ('Path : '+os.getcwd());
 
 
-
-
 print('-----------------------FILE IO-----------------------');
 
 #읽어오기
@@ -23,7 +21,6 @@ def list_marc(marc):
         if marc[count] != "\n":
             marc1.append(marc[count]);
         count=count+1;
-    #marc=marc[0::2];
     return marc1
     
 #코라스 반출시 \n 값이 같이 나와서 짝수만 리스트업
@@ -32,9 +29,8 @@ marc = list_marc(marc);
 print ('--------------------------MARC---------------');
 print (marc);
 print ('---------------------------------------------');
-#marc_num = int((len(marc)+1)/2);
-marc_num = len(marc);
 
+marc_num = len(marc);
 
 
 print ("marc num : ",marc_num);
@@ -46,7 +42,6 @@ len_245 =0;
 start_245 =0;
 start_data=0;
 len_total=0;
-
 change_marc=[];
 
 while num<marc_num :
@@ -76,7 +71,6 @@ while num<marc_num :
             print ('245 tag length :',len_245);
 
         directory_num = directory_num -1;
-    
     
     
     tag_245="";
@@ -169,3 +163,6 @@ print("change_marc : ",change_marc);
 
 oFile.close();
 NewFile.close();
+
+print("created by hojnam23@gmail.com");
+
